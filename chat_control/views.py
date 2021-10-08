@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
-from chat.models import Threads, Message
-from chat.serializers import PreviousMessageSerializer
+from chat_control.models import Threads, Message
+from chat_control.serializers import PreviousMessageSerializer
 
 User = get_user_model()
 

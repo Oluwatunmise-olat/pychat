@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 
-from chat.models import Threads, Message
+from chat_control.models import Threads, Message
 from channels.db import database_sync_to_async
 
 User = get_user_model()
