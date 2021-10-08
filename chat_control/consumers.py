@@ -11,8 +11,12 @@ from channels.db import database_sync_to_async
 
 User = get_user_model()
 
+user_1 = User.objects.get(id=1)
+user_2 = User.objects.get(id=3)
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
+
     @database_sync_to_async
     def get_user(self, user):
         return User.objects.get(username=user)
@@ -20,11 +24,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_or_create_threads(self, me, other_user):
         thread_instance = Threads.objects.filter(
-            Q(me=me) &
-            Q(recipient=other_user) |
-            Q(me=other_user) &
-            Q(recipient=me)
+            Q(me=user_1) &
+            Q(recipient=user_2) |
+            Q(me=user_2) &
+            Q(recipient=user_1)
         )
+        """
+            thread_instance = Threads.objects.filter(
+                Q(me=me) &
+                Q(recipient=other_user) |
+                Q(me=other_user) &
+                Q(recipient=me)
+            )
+        """
         if not thread_instance.exists():
             thread_instance = Threads.objects.create(
                 me=me, recipient=other_user
@@ -46,6 +58,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return "Why not start a conversation now"
 
     async def connect(self):
+        print(self.scope['user'])
         self.other_user = self.scope['url_route']['kwargs']['username']
         self.room_group_name = 'broadcast'
         me = self.scope["user"]
