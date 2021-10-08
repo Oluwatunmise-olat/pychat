@@ -11,9 +11,6 @@ from channels.db import database_sync_to_async
 
 User = get_user_model()
 
-user_1 = User.objects.get(id=1).id
-user_2 = User.objects.get(id=3).id
-
 
 class ChatConsumer(AsyncWebsocketConsumer):
 
