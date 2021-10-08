@@ -11,15 +11,16 @@ User = get_user_model()
 
 
 @api_view(['GET'])
-def peer_to_peer(request, user_channel_name):
+def peer_to_peer(request, user_id):
+    print(request.user)
     serializer_class = PreviousMessageSerializer
     """
         This function handles loading of
         previous chat of users.
         Note: It is a peer to peer system
     """
-    me = User.objects.get(username=request.user.username)
-    other_user = User.objects.get(username=user_channel_name)
+    me = User.objects.get(id=request.user.id)
+    other_user = User.objects.get(id=user_id)
     thread_instance = Threads.objects.filter(
         Q(me=me) &
         Q(recipient=other_user) |
@@ -31,4 +32,4 @@ def peer_to_peer(request, user_channel_name):
 
     history = Message.objects.filter(thread=thread_instance.first())
     previous_chat = serializer_class(history, many=True).data
-    return Response({'chat_history': previous_chat.data}, status="200")
+    return Response({'chat_history': previous_chat}, status="200")
